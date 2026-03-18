@@ -1,6 +1,9 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 
-app = Flask(__name__, template_folder='../templates')
+# This tells Flask exactly where to find the templates folder
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
+app = Flask(__name__, template_folder=template_dir)
 
 @app.route('/')
 def home():
@@ -10,8 +13,7 @@ def home():
 def login():
     user = request.form.get('username')
     password = request.form.get('password')
-
-    # Case-insensitive check for password using .lower()
+    # Password check is NOT case sensitive
     if user == "Admn" and password.lower() == "letmein123":
         return redirect(url_for('completed'))
     else:
@@ -21,5 +23,5 @@ def login():
 def completed():
     return render_template('success.html')
 
-# Essential for Vercel
+# This is required for Vercel to treat this as a function
 app.debug = True
